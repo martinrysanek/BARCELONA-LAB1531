@@ -1,0 +1,185 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "FAQ Orchestrator",
+    "version": "1.0.0",
+    "description": "An API for querying intents from query"
+  },
+  "servers": [
+    {
+      "url": "https://{wa_url}",
+      "description": "FAQ Orchestrator / Code Enginge Application",
+      "variables": {
+        "wa_url": {
+          "default": "",
+          "description": "FAQ Orchestrator forward query requests to another Watsonx Assistant Instance to get list of FAQs"
+        }
+      }
+    }
+  ],
+  "externalDocs": {
+    "description": "For more information about this service, see docs.",
+    "url": "https://cloud.ibm.com/docs/assistant",
+    "x-release-notes": "https://cloud.ibm.com/docs/assistant?topic=assistant-index"
+  },
+  "paths": {
+    "/query": {
+      "post": {
+        "summary": "Query Intent from Text",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "query": {
+                    "type": "string",
+                    "description": "The text query for intent detection"
+                  }
+                },
+                "required": [
+                  "query"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "intent": {
+                        "type": "string",
+                        "description": "The detected intent"
+                      },
+                      "text": {
+                        "type": "string",
+                        "description": "The input text"
+                      },
+                      "confidence": {
+                        "type": "number",
+                        "format": "float",
+                        "description": "Confidence score of the detected intent (0.0 - 1.0)"
+                      }
+                    },
+                    "required": [
+                      "intent",
+                      "text",
+                      "confidence"
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Description of the error"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Query"
+        ]
+      }
+    },
+    "/selection": {
+      "post": {
+        "summary": "Select Intent by Confidence",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "query": {
+                    "type": "string",
+                    "description": "The text query for intent selection"
+                  },
+                  "selected_name": {
+                    "type": "string",
+                    "description": "Selected intent name"
+                  },
+                  "selected_confidence": {
+                    "type": "number",
+                    "format": "float",
+                    "description": "Selected intenet confidence (0.0 - 1.0)"
+                  },
+                  "top_name": {
+                    "type": "string",
+                    "description": "Top intent name"
+                  },
+                  "top_confidence": {
+                    "type": "number",
+                    "format": "float",
+                    "description": "Top intenet confidence (0.0 - 1.0)"
+                  },
+                  "ranking": {
+                    "type": "string",
+                    "description": "Ranking of answer (Good, Fair, Poor)"
+                  }
+                },
+                "required": [
+                  "query",
+                  "selected_name",
+                  "selected_confidence"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response (No JSON output)"
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Description of the error"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Selection"
+        ]
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "Query"
+    },
+    {
+      "name": "Selection"
+    }
+  ]
+}
